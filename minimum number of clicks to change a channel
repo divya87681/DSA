@@ -1,0 +1,61 @@
+import java.util.*;
+
+public class Main {
+    public static void main(String[] args) {
+        Scanner sc = new Scanner(System.in);
+
+        System.out.println("Starting channel:");
+        int start = sc.nextInt();
+
+        System.out.println("Ending channel:");
+        int end = sc.nextInt();
+
+        System.out.println("Number of blocked channels:");
+        int blocked = sc.nextInt();
+
+        System.out.println("Enter blocked channels:");
+        int[] bc = new int[blocked];
+        for (int i = 0; i < blocked; i++) {
+            bc[i] = sc.nextInt();
+        }
+
+        System.out.println("Number of channels to watch:");
+        int ch_no = sc.nextInt();
+
+        System.out.println("Enter the channel numbers to watch:");
+        int[] cc = new int[ch_no];
+        for (int i = 0; i < ch_no; i++) {
+            cc[i] = sc.nextInt();
+        }
+
+        System.out.println("Minimum clicks required: " + min_clicks(start, end, bc, cc));
+    }
+
+    public static int min_clicks(int start, int end, int[] bc, int[] cc) {
+        int clicks = 0;
+        int current = start;
+        int prev = -1;  
+
+        Set<Integer> blockedSet = new HashSet<>();
+        for (int b : bc) {
+            blockedSet.add(b);
+        }
+
+        for (int ch : cc) {
+            if (blockedSet.contains(ch) || ch < 1 || ch > end) {
+                continue;
+            }
+            if (ch == prev) {
+                clicks += 1; 
+            } else {
+                int digitClicks = (ch < 10) ? 1 : 2;
+                int upDownClicks = Math.abs(current - ch);
+                clicks += Math.min(digitClicks, upDownClicks);
+            }
+
+            prev = current; 
+            current = ch;  
+        }
+        return clicks;
+    }
+}
